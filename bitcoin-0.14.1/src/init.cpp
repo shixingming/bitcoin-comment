@@ -1411,7 +1411,7 @@ bool AppInitParameterInteraction(Config &config) {
 
         InitWarning(msg);
     }
-
+    //激活硬分叉参数
     const int64_t nProposedUAHFStartTime =
         GetArg("-uahfstarttime", DEFAULT_UAHF_START_TIME);
     if (!config.SetUAHFStartTime(nProposedUAHFStartTime)) {

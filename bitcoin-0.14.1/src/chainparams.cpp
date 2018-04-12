@@ -95,21 +95,28 @@ class CMainParams : public CChainParams {
 public:
     CMainParams() {
         strNetworkID = "main";
+        //奖励调整周期
         consensus.nSubsidyHalvingInterval = 210000;
+        //BIP34启用高度
         consensus.BIP34Height = 227931;
         consensus.BIP34Hash = uint256S("0x000000000000024b89b42a942fe0d9fea3bb4"
                                        "4ab7bd1b19115dd6a759c0808b8");
+        //BIP65启用高度
         // 000000000000000004c2b624ed5d7756c508d90fd0da2c7c679febfa6c4735f0
         consensus.BIP65Height = 388381;
         // 00000000000000000379eaa19dce8c9b722d46ae6a57c2f1a988119488b50931
         consensus.BIP66Height = 363725;
+        
         consensus.antiReplayOpReturnSunsetHeight = 530000;
         consensus.antiReplayOpReturnCommitment = GetAntiReplayCommitment();
         consensus.powLimit = uint256S(
             "00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        // 难度调整时间
         // two weeks
         consensus.nPowTargetTimespan = 14 * 24 * 60 * 60;
+        // 区块产生平均时间
         consensus.nPowTargetSpacing = 10 * 60;
+        ////是否允许最低难度
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         // 95% of 2016

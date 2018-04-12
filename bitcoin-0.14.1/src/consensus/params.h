@@ -38,7 +38,9 @@ struct BIP9Deployment {
  * Parameters that influence chain consensus.
  */
 struct Params {
+    //创世块hash值
     uint256 hashGenesisBlock;
+    //奖励调整周期
     int nSubsidyHalvingInterval;
     /** Block height and hash at which BIP34 becomes active */
     int BIP34Height;
@@ -61,15 +63,17 @@ struct Params {
     uint32_t nMinerConfirmationWindow;
     BIP9Deployment vDeployments[MAX_VERSION_BITS_DEPLOYMENTS];
     /** Proof of work parameters */
-    uint256 powLimit;
-    bool fPowAllowMinDifficultyBlocks;
-    bool fPowNoRetargeting;
-    int64_t nPowTargetSpacing;
-    int64_t nPowTargetTimespan;
+    uint256 powLimit; // 难度
+    bool fPowAllowMinDifficultyBlocks;//是否允许最低难度
+    bool fPowNoRetargeting;// 不调整难度
+    int64_t nPowTargetSpacing;// 区块产生平均时间
+    int64_t nPowTargetTimespan;// 难度调整时间
     int64_t DifficultyAdjustmentInterval() const {
         return nPowTargetTimespan / nPowTargetSpacing;
     }
+    // 当前难度最小值
     uint256 nMinimumChainWork;
+    // 在此区块之前的区块都认为是有效的
     uint256 defaultAssumeValid;
 };
 } // namespace Consensus

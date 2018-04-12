@@ -64,8 +64,8 @@ void WaitForShutdown(boost::thread_group *threadGroup) {
 // Start
 //
 bool AppInit(int argc, char *argv[]) {
-    boost::thread_group threadGroup;
-    CScheduler scheduler;
+    boost::thread_group threadGroup;//线程池
+    CScheduler scheduler;//调度引擎
 
     // FIXME: Ideally, we'd like to build the config here, but that's currently
     // not possible as the whole application has too many global state. However,
@@ -199,9 +199,11 @@ bool AppInit(int argc, char *argv[]) {
 }
 
 int main(int argc, char *argv[]) {
+    //设置运行环境
     SetupEnvironment();
 
     // Connect bitcoind signal handlers
+    //连接bitcoind 信号处理
     noui_connect();
 
     return (AppInit(argc, argv) ? EXIT_SUCCESS : EXIT_FAILURE);

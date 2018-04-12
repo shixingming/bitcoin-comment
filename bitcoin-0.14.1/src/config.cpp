@@ -34,7 +34,7 @@ int64_t GlobalConfig::GetUAHFStartTime() const {
 const CChainParams &GlobalConfig::GetChainParams() const {
     return Params();
 }
-
+//全局配置
 static GlobalConfig gConfig;
 
 const Config &GetConfig() {

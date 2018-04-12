@@ -18,18 +18,25 @@
  * the block is a special one that creates a new coin owned by the creator of
  * the block.
  */
+//区块头
 class CBlockHeader {
 public:
     // header
+    //版本号
     int32_t nVersion;
+    //前一块hash值
     uint256 hashPrevBlock;
+    //账单树hash值
     uint256 hashMerkleRoot;
+    //区块生成时间
     uint32_t nTime;
+    //难度位  推算出难度值，用于验证block hash难度是否达标
     uint32_t nBits;
+    //随机数 用于区块链常用的椭圆算法 
     uint32_t nNonce;
 
     CBlockHeader() { SetNull(); }
-
+    //序列化
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>

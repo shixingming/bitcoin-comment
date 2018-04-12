@@ -24,6 +24,7 @@ class GlobalConfig final : public Config {
 public:
     bool SetMaxBlockSize(uint64_t maxBlockSize);
     uint64_t GetMaxBlockSize() const;
+    //用户激活硬分叉S
     bool SetUAHFStartTime(int64_t uahfStartTime);
     int64_t GetUAHFStartTime() const;
     const CChainParams &GetChainParams() const;
