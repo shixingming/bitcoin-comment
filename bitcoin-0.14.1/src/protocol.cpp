@@ -11,7 +11,7 @@
 #ifndef WIN32
 #include <arpa/inet.h>
 #endif
-
+//As of Bitcoin Core 0.14.2, the most recent protocol version is 70015.
 namespace NetMsgType {
 const char *VERSION = "version";
 const char *VERACK = "verack";
@@ -59,16 +59,16 @@ const static std::vector<std::string>
     allNetMessageTypesVec(allNetMessageTypes,
                           allNetMessageTypes + ARRAYLEN(allNetMessageTypes));
 
-CMessageHeader::CMessageHeader(const MessageStartChars &pchMessageStartIn) {
-    memcpy(pchMessageStart, pchMessageStartIn, MESSAGE_START_SIZE);
-    memset(pchCommand, 0, sizeof(pchCommand));
+CMessageHeader::CMessageHeader(const MessageStartChars &pchMessageStartIn) {//空包
+    memcpy(pchMessageStart, pchMessageStartIn, MESSAGE_START_SIZE);//拷贝魔数
+    memset(pchCommand, 0, sizeof(pchCommand));//制空命令
     nMessageSize = -1;
-    memset(pchChecksum, 0, CHECKSUM_SIZE);
+    memset(pchChecksum, 0, CHECKSUM_SIZE);//制空校验
 }
 
 CMessageHeader::CMessageHeader(const MessageStartChars &pchMessageStartIn,
                                const char *pszCommand,
-                               unsigned int nMessageSizeIn) {
+                               unsigned int nMessageSizeIn) { //消息复制
     memcpy(pchMessageStart, pchMessageStartIn, MESSAGE_START_SIZE);
     memset(pchCommand, 0, sizeof(pchCommand));
     strncpy(pchCommand, pszCommand, COMMAND_SIZE);
@@ -80,7 +80,7 @@ std::string CMessageHeader::GetCommand() const {
     return std::string(pchCommand,
                        pchCommand + strnlen(pchCommand, COMMAND_SIZE));
 }
-
+//校验消息
 bool CMessageHeader::IsValid(const MessageStartChars &pchMessageStartIn) const {
     // Check start string
     if (memcmp(pchMessageStart, pchMessageStartIn, MESSAGE_START_SIZE) != 0)

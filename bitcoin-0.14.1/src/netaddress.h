@@ -24,7 +24,7 @@ enum Network {
 
     NET_MAX,
 };
-
+//IP地址封装类
 /** IP address (IPv6, or IPv4 using mapped IPv6 range (::FFFF:0:0/96)) */
 class CNetAddr {
 protected:
