@@ -110,6 +110,7 @@ bool AppInit(int argc, char *argv[]) {
             return false;
         }
         try {
+            //处理配置文件命令
             ReadConfigFile(GetArg("-conf", BITCOIN_CONF_FILENAME));
         } catch (const std::exception &e) {
             fprintf(stderr, "Error reading configuration file: %s\n", e.what());
@@ -117,6 +118,7 @@ bool AppInit(int argc, char *argv[]) {
         }
         // Check for -testnet or -regtest parameter (Params() calls are only
         // valid after this clause)
+        //处理 主网还是测试网 参数
         try {
             SelectParams(ChainNameFromCommandLine());
         } catch (const std::exception &e) {
@@ -139,8 +141,10 @@ bool AppInit(int argc, char *argv[]) {
         }
         // -server defaults to true for bitcoind but not for the GUI so do this
         // here
+        // gui 跟daemon 效果不一样
         SoftSetBoolArg("-server", true);
         // Set this early so that parameter interactions go to console
+        //初始化日志
         InitLogging();
         InitParameterInteraction();
         if (!AppInitBasicSetup()) {

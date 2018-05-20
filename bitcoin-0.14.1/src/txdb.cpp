@@ -177,7 +177,8 @@ bool CBlockTreeDB::ReadFlag(const std::string &name, bool &fValue) {
     fValue = ch == '1';
     return true;
 }
-
+//在初始化区块链时，从数据库中加载区块索引（LoadBlockIndexGuts）到区块索引
+//映射中
 bool CBlockTreeDB::LoadBlockIndexGuts(
     boost::function<CBlockIndex *(const uint256 &)> insertBlockIndex) {
     std::unique_ptr<CDBIterator> pcursor(NewIterator());

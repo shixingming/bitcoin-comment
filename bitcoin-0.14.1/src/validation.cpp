@@ -3808,7 +3808,10 @@ CBlockIndex *InsertBlockIndex(uint256 hash) {
 
     return pindexNew;
 }
-
+/*
+//在初始化区块链时，从数据库中加载区块索引（LoadBlockIndexGuts）到区块索引
+//映射中
+*/
 bool static LoadBlockIndexDB(const CChainParams &chainparams) {
     if (!pblocktree->LoadBlockIndexGuts(InsertBlockIndex)) return false;
 

@@ -666,6 +666,7 @@ int RaiseFileDescriptorLimit(int nMinFD) {
  * (corresponding to disk space) it is advisory, and the range specified in the
  * arguments will never contain live data.
  */
+//分配特定大小的文件
 void AllocateFileRange(FILE *file, unsigned int offset, unsigned int length) {
 #if defined(WIN32)
     // Windows-specific version.
@@ -716,6 +717,7 @@ void ShrinkDebugFile() {
     FILE *file = fopen(pathLog.string().c_str(), "r");
     // If debug.log file is more than 10% bigger the RECENT_DEBUG_HISTORY_SIZE
     // trim it down by saving only the last RECENT_DEBUG_HISTORY_SIZE bytes.
+    //如果debug.log的大小大于RECENT_DEBUG_HISTORY_SIZE 就保存最新的数据
     if (file &&
         boost::filesystem::file_size(pathLog) >
             11 * (RECENT_DEBUG_HISTORY_SIZE / 10)) {
@@ -749,14 +751,14 @@ boost::filesystem::path GetSpecialFolderPath(int nFolder, bool fCreate) {
     return fs::path("");
 }
 #endif
-
+//执行系统环境命令
 void runCommand(const std::string &strCommand) {
     int nErr = ::system(strCommand.c_str());
     if (nErr)
         LogPrintf("runCommand error: system(%s) returned %d\n", strCommand,
                   nErr);
 }
-
+//线程重命名
 void RenameThread(const char *name) {
 #if defined(PR_SET_NAME)
     // Only the first 15 characters are used (16 - NUL terminator)
@@ -783,8 +785,21 @@ void SetupEnvironment() {
         mallopt(M_ARENA_MAX, 1);
     }
 #endif
+/*
+此处内存分配区设置的目的是为了防止32位操作系统中虚拟地址空间过渡使用，
+即程序中的控制内存分配。通过sizeof(void*)==4判断当前系统是否为32位，
+如果是，则通过mallopt设置只有1个内存分配区，即表示系统按CPU进行自动设置。
+*/
 // On most POSIX systems (e.g. Linux, but not BSD) the environment's locale may
 // be invalid, in which case the "C" locale is used as fallback.
+
+/*
+C/C++程序中，locale（即系统区域设置，即国家或地区设置）
+将决定程序所使用的当前语言编码、日期格式、数字格式及其它与区域有关的设置，
+locale设置的正确与否将影响到程序中字符串处理（wchar_t如何输出、strftime()的格式等）。
+因此，对于每一个程序，都应该慎重处理locale设置。
+
+*/
 #if !defined(WIN32) && !defined(MAC_OSX) && !defined(__FreeBSD__) &&           \
     !defined(__OpenBSD__)
     try {
@@ -801,7 +816,7 @@ void SetupEnvironment() {
     std::locale loc = boost::filesystem::path::imbue(std::locale::classic());
     boost::filesystem::path::imbue(loc);
 }
-
+//初始化网络库
 bool SetupNetworking() {
 #ifdef WIN32
     // Initialize Windows Sockets.
@@ -813,7 +828,7 @@ bool SetupNetworking() {
 #endif
     return true;
 }
-
+//获取CPU核心数
 int GetNumCores() {
 #if BOOST_VERSION >= 105600
     return boost::thread::physical_concurrency();
@@ -823,7 +838,7 @@ int GetNumCores() {
     return boost::thread::hardware_concurrency();
 #endif
 }
-
+//团队名称
 std::string CopyrightHolders(const std::string &strPrefix) {
     std::string strCopyrightHolders =
         strPrefix +

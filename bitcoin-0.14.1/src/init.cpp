@@ -969,7 +969,7 @@ void ThreadImport(const Config &config,
 
     {
         CImportingNow imp;
-
+        //启动初始化区块索引线程
         // -reindex
         if (fReindex) {
             int nFile = 0;
@@ -1570,7 +1570,7 @@ bool AppInitParameterInteraction(Config &config) {
 
 static bool LockDataDirectory(bool probeOnly) {
     std::string strDataDir = GetDataDir().string();
-
+    //创建数据文件
     // Make sure only a single Bitcoin process is using the data directory.
     boost::filesystem::path pathLockFile = GetDataDir() / ".lock";
     // empty lock file; created if it doesn't exist.

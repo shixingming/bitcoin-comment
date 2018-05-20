@@ -98,7 +98,25 @@ namespace NetMsgType {
  * receiving node at the beginning of a connection.
  * @see https://bitcoin.org/en/developer-reference#version
  */
-//该version消息在连接开始时 向接收节点提供有关发送节点的信息。直到两位同伴 交换消息，才会接受其他消息。
+//该version消息在连接开始时 向接收节点提供有关发送节点的信息。
+//直到两位同伴 交换消息，才会接受其他消息。
+/*
+节点初始化时（类CNode的构造函数），发送获取版本信息的命令。接收到此
+命令，回应版本信息，同时把所有警告也反馈回去。!
+! 发送端只能发送⼀一次获取版本的命令，重复发送时，回应拒绝命令
+（reject）。!
+! 源节点的版本号不能⼩小于MIN_PEER_PROTO_VERSION（209），否则也回
+应拒绝消息，且断开连接。!
+! 连接⾃自⼰己时，将断开连接。接收信息中的随机数与本地主机的随机数
+（nLocalHostNonce）相同时，就是在连接⾃自⼰己。!
+! 发送版本回应命令，新版本为发送端的版本号与PROTOCOL_VERSION
+（70002）中的最⼩小值。!
+! 发送命令后，把源节点的地址信息添加到节点的地址管理器中。!
+! 最后设置源节点成功连接标记（fSuccessfullyConnected），更新源节点地址
+时间。!
+! 如果源节点是⺴⽹网络节点（节点的fNetworkNode判断），则每隔20分钟更新节
+点的IP地址管理器（CAddrMan）中地址信息（CAddrInfo）的时间（nTime）。
+*/
 extern const char *VERSION;
 /**
  * The verack message acknowledges a previously-received version message,

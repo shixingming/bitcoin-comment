@@ -10,7 +10,7 @@
 #include <cstdint>
 
 class CChainParams;
-
+//区块一致性配置类
 class Config : public boost::noncopyable {
 public:
     virtual bool SetMaxBlockSize(uint64_t maxBlockSize) = 0;
