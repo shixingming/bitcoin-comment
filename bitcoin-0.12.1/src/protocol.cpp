@@ -11,7 +11,7 @@
 #ifndef WIN32
 # include <arpa/inet.h>
 #endif
-
+//网络协议版本号70012
 namespace NetMsgType {
 const char *VERSION="version";
 const char *VERACK="verack";

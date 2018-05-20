@@ -8,7 +8,7 @@
 /**
  * network protocol versioning
  */
-
+//网络协议版本号
 static const int PROTOCOL_VERSION = 70012;
 
 //! initial proto version, to be increased after version/verack negotiation

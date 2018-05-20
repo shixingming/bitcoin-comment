@@ -26,6 +26,30 @@
  * (4) size.
  * (4) checksum.
  */
+
+/*
+
+
+
+
+
+All messages in the network protocol use the same container format, which provides a required multi-field message header and an optional payload. The message header format is:
+所有的消息都是用的同样的结构格式
+Bytes	Name	    Data Type	Description
+4	start string	char[4]	    网络魔数 ;当流状态未知时，用于寻找下一条消息 
+12	command name	char[12]	命令   for example: version\0\0\0\0\0. https://bitcoin.org/en/developer-reference#protocol-versions
+4	payload size	uint32_t	负载块大小 Number of bytes in payload. The current maximum number of bytes (MAX_SIZE) allowed in the payload by Bitcoin Core is 32 MiB—messages with a payload size larger than this will be dropped or rejected.
+4	checksum	    char[4]	    校验 Added in protocol version 209. 
+
+First 4 bytes of SHA256(SHA256(payload)) in internal byte order.
+
+If payload is empty, as in verack and getaddr messages, the checksum is always 0x5df6e0e2 (SHA256(SHA256(<empty string>))).
+
+
+
+70012
+
+*/
 class CMessageHeader
 {
 public:
@@ -76,23 +100,39 @@ namespace NetMsgType {
  * receiving node at the beginning of a connection.
  * @see https://bitcoin.org/en/developer-reference#version
  */
+//该version消息在连接开始时 向接收节点提供有关发送节点的信息。直到两位同伴 交换消息，才会接受其他消息。
 extern const char *VERSION;
 /**
  * The verack message acknowledges a previously-received version message,
  * informing the connecting node that it can begin to send other messages.
  * @see https://bitcoin.org/en/developer-reference#verack
  */
+//version 确认消息
 extern const char *VERACK;
 /**
  * The addr (IP address) message relays connection information for peers on the
  * network.
  * @see https://bitcoin.org/en/developer-reference#addr
  */
+//该getaddr消息请求来自接收 节点的addr消息，最好是接受具有大量其他接收节点的IP地址的消息。
+//发送节点可以使用这些IP地址来快速更新其可用节点的数据库，而不是等待来路不明的消息
+/*
+发送端⽤用这个命令⼲⼴广播地址，接收端收到此命令后把接收到的地址添加到节点
+的地址管理器中。
+! 发送、接收的地址数量最多1000个。!
+! 节点地址管理器中的地址数量超过1000个时，不再添加⽼老版本的地址，即源节
+点的版本号⼩小于CADDR_TIME_VERSION（31402）。!
+! 如果源节点是⺴⽹网络节点（节点的fNetworkNode判断），则每隔20分钟更新节
+点的IP地址管理器（CAddrMan）中地址信息（CAddrInfo）的时间（nTime）。
+*/
 extern const char *ADDR;
 /**
  * The inv message (inventory message) transmits one or more inventories of
  * objects known to the transmitting peer.
  * @see https://bitcoin.org/en/developer-reference#inv
+ * 当需要获取inventory时，发送此命令，发送时，需要指定范围。
+ * 接收到此命令后，按指定范围获取inventory数据（PushGetBlocks）。
+ * 每次最多获取50000个。
  */
 extern const char *INV;
 /**
@@ -135,6 +175,11 @@ extern const char *HEADERS;
 /**
  * The block message transmits a single serialized block.
  * @see https://bitcoin.org/en/developer-reference#block
+ * 当发送端发送获取数据命令时（”getdata"），接收端从硬盘读取区块，把类型
+ * 为MSG_BLOCK的区块反馈回去。
+ * 接收端收到区块命令后，当节点不在导⼊入、重建索引状态时，处理区块
+ * （ProcessBlock）。
+ * 如果是DoS攻击，则向源节点发送拒绝消息（reject）。
  */
 extern const char *BLOCK;
 /**
@@ -155,6 +200,8 @@ extern const char *MEMPOOL;
  * peer is still connected.
  * @see https://bitcoin.org/en/developer-reference#ping
  */
+//如果发送ping 消息时遇到TCP / IP错误（例如连接超时），
+//则发送节点可以假定接收节点已断开连接。ping 消息的回应是pong消息。
 extern const char *PING;
 /**
  * The pong message replies to a ping message, proving to the pinging node that
@@ -193,6 +240,7 @@ extern const char *FILTERLOAD;
  *   Only available with service bit NODE_BLOOM since protocol version
  *   70011 as described by BIP111.
  * @see https://bitcoin.org/en/developer-reference#filteradd
+ * 添加过滤交易信息到源节点的过滤器中（pfilter），过滤信息最⼤大是520字节
  */
 extern const char *FILTERADD;
 /**
@@ -209,6 +257,7 @@ extern const char *FILTERCLEAR;
  * messages has been rejected.
  * @since protocol version 70002 as described by BIP61.
  * @see https://bitcoin.org/en/developer-reference#reject
+ * 拒绝消息    通知接收节点它之前的一条消息被拒绝。
  */
 extern const char *REJECT;
 /**
