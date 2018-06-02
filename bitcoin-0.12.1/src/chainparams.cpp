@@ -177,10 +177,18 @@ public:
         consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
         // 区块产生平均时间
         consensus.nPowTargetSpacing = 10 * 60;
-        //是否允许最低难度
+        //是否允许最低难度(仅在测试网络中适用)
         consensus.fPowAllowMinDifficultyBlocks = true;
+        //每个难度周期内（ nMinerConfirmationWindow 个块）不允许调整难度值
         consensus.fPowNoRetargeting = false;
+        //BIP9允许部署多个向后兼容的软分叉，
+        //通过旷工在一个目标周期内投票，
+        //如果达到激活阈值nRuleChangeActivationThreshold,
+        //就能成功的启用该升级
         consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
+        //bitcoin 中的版本检测按照 nMinerConfirmationWindow 为一轮进行检测，
+        //在本轮之间的所有区块，
+        //都与本轮的第一个块状态相同。
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
@@ -190,16 +198,41 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1456790400; // March 1st, 2016
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1493596800; // May 1st, 2017
-
+        //网络消息魔数
         pchMessageStart[0] = 0x0b;
         pchMessageStart[1] = 0x11;
         pchMessageStart[2] = 0x09;
         pchMessageStart[3] = 0x07;
         vAlertPubKey = ParseHex("04302390343f91cc401d56d68b123028bf52e5fca1939df127f63c6467cdf9c8e2c14b61104cf817d0b780da337893ecc4aaff1309e536162dabbdb45200ca2b0a");
+        //端口号
         nDefaultPort = 18333;
         nMaxTipAge = 0x7fffffff;
         nPruneAfterHeight = 1000;
+        //创世块
+        //关于如何生成自定义创世块 参考如下代码
+        //注意 如果首次生成创始块，需要把assert注释掉，然后在debug.log里找到生成创始块的参数，然后填进去，就可以了
+        /*
+        int nNonce = 0;
+        std::time_t t = std::time(0);
+        genesis = CreateGenesisBlock(t, nNonce, 0x1d00ffff, 1, 50 * COIN);//Time, Nonce,nBits, version, reward
+        consensus.hashGenesisBlock = genesis.GetHash();
+        while(true)
+        {
+            
+            
+            if (true == CheckProofOfWork(consensus.hashGenesisBlock,0x1d00ffff,consensus)){
+                LogPrint("nNonce time: %d %d\n",nNonce,t);
+                LogPrint("GenesisBlock : %s \n",consensus.hashGenesisBlock.ToString());
+                break;
+            }
+            else{
+                t = std::time(0);
+                genesis = CreateGenesisBlock(t, ++nNonce, 0x1d00ffff, 1, 50 * COIN);//Time, Nonce,nBits, version, reward
+                consensus.hashGenesisBlock = genesis.GetHash();
+            }
+        }
 
+        */
         genesis = CreateGenesisBlock(1296688602, 414098458, 0x1d00ffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
         assert(consensus.hashGenesisBlock == uint256S("0x000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"));
@@ -211,10 +244,15 @@ public:
         vSeeds.push_back(CDNSSeedData("bluematt.me", "testnet-seed.bluematt.me"));
         vSeeds.push_back(CDNSSeedData("bitcoin.schildbach.de", "testnet-seed.bitcoin.schildbach.de"));
 
+        //公钥地址前缀
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
+        
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
+        
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
+        
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
+        
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));

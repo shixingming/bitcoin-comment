@@ -47,7 +47,7 @@ If payload is empty, as in verack and getaddr messages, the checksum is always 0
 
 
 
-70012
+网络协议版本号70012
 
 */
 class CMessageHeader
