@@ -11,15 +11,19 @@
 #include "primitives/transaction.h"
 #include "primitives/block.h"
 #include "uint256.h"
-
+//计算merkle根hash
 uint256 ComputeMerkleRoot(const std::vector<uint256>& leaves, bool* mutated = NULL);
+//计算merkle分支hash
 std::vector<uint256> ComputeMerkleBranch(const std::vector<uint256>& leaves, uint32_t position);
+//根据分支计算merkle根
 uint256 ComputeMerkleRootFromBranch(const uint256& leaf, const std::vector<uint256>& branch, uint32_t position);
 
 /*
  * Compute the Merkle root of the transactions in a block.
  * *mutated is set to true if a duplicated subtree was found.
  */
+//
+//用于计算区块的交易树
 uint256 BlockMerkleRoot(const CBlock& block, bool* mutated = NULL);
 
 /*
@@ -27,6 +31,7 @@ uint256 BlockMerkleRoot(const CBlock& block, bool* mutated = NULL);
  * given position.
  * This can be verified using ComputeMerkleRootFromBranch.
  */
+//用于验证merkle分支
 std::vector<uint256> BlockMerkleBranch(const CBlock& block, uint32_t position);
 
 #endif

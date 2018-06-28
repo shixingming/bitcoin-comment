@@ -74,6 +74,7 @@ public:
 };
 
 /** Access to the wallet database (wallet.dat) */
+//比特币钱包文件操作类
 class CWalletDB : public CDB
 {
 public:

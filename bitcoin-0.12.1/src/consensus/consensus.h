@@ -12,6 +12,8 @@ static const unsigned int MAX_BLOCK_SIZE = 1000000;
 /** The maximum allowed number of signature check operations in a block (network rule) */
 static const unsigned int MAX_BLOCK_SIGOPS = MAX_BLOCK_SIZE/50;
 /** Coinbase transaction outputs can only be spent after this number of new blocks (network rule) */
+//基于coinbase 的交易输出要在 COINBASE_MATURITY 个确认之后才能被认定为可消费的（为了防止分叉造成的孤块可交易）
+//https://bitcoin.stackexchange.com/questions/1991/what-is-the-block-maturation-time
 static const int COINBASE_MATURITY = 100;
 
 /** Flags for nSequence and nLockTime locks */

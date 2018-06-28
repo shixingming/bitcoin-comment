@@ -12,6 +12,7 @@
        is unusual in Merkle trees). This results in certain sequences of
        transactions leading to the same merkle root. For example, these two
        trees:
+       //merkle树是有缺陷的
 
                     A               A
                   /  \            /   \
@@ -150,7 +151,11 @@ uint256 ComputeMerkleRootFromBranch(const uint256& leaf, const std::vector<uint2
     }
     return hash;
 }
-
+/*
+计算交易树的根
+分析：
+ComputeMerkleRoot
+*/
 uint256 BlockMerkleRoot(const CBlock& block, bool* mutated)
 {
     std::vector<uint256> leaves;
@@ -160,7 +165,11 @@ uint256 BlockMerkleRoot(const CBlock& block, bool* mutated)
     }
     return ComputeMerkleRoot(leaves, mutated);
 }
-
+/*
+计算交易树的分支
+分析：
+把一个区块的所有交易记录计算hash，然后调用ComputeMerkleBranch
+*/
 std::vector<uint256> BlockMerkleBranch(const CBlock& block, uint32_t position)
 {
     std::vector<uint256> leaves;

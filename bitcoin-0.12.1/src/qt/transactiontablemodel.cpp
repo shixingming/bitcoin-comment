@@ -361,7 +361,7 @@ QString TransactionTableModel::lookupAddress(const std::string &address, bool to
     }
     return description;
 }
-
+//交易类型转换
 QString TransactionTableModel::formatTxType(const TransactionRecord *wtx) const
 {
     switch(wtx->type)
@@ -381,7 +381,7 @@ QString TransactionTableModel::formatTxType(const TransactionRecord *wtx) const
         return QString();
     }
 }
-
+//交易类型图标转换
 QVariant TransactionTableModel::txAddressDecoration(const TransactionRecord *wtx) const
 {
     switch(wtx->type)

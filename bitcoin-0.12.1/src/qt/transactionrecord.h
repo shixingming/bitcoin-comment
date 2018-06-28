@@ -65,21 +65,23 @@ public:
 /** UI model for a transaction. A core transaction can be represented by multiple UI transactions if it has
     multiple outputs.
  */
+//交易记录
 class TransactionRecord
 {
 public:
     enum Type
     {
-        Other,
-        Generated,
-        SendToAddress,
+        Other, //其他
+        Generated, //挖矿所得
+        SendToAddress, //发送地址
         SendToOther,
-        RecvWithAddress,
+        RecvWithAddress, //接收
         RecvFromOther,
         SendToSelf
     };
 
     /** Number of confirmation recommended for accepting a transaction */
+    //交易确认数
     static const int RecommendedNumConfirmations = 6;
 
     TransactionRecord():
