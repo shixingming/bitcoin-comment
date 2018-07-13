@@ -627,6 +627,7 @@ void BitcoinGUI::showHelpMessageClicked()
 }
 
 #ifdef ENABLE_WALLET
+//菜单 打开URI
 void BitcoinGUI::openClicked()
 {
     OpenURIDialog dlg(this);
@@ -635,42 +636,42 @@ void BitcoinGUI::openClicked()
         Q_EMIT receivedURI(dlg.getURI());
     }
 }
-
+//TAB 去主页
 void BitcoinGUI::gotoOverviewPage()
 {
     overviewAction->setChecked(true);
     if (walletFrame) walletFrame->gotoOverviewPage();
 }
-
+//TAB 交易记录
 void BitcoinGUI::gotoHistoryPage()
 {
     historyAction->setChecked(true);
     if (walletFrame) walletFrame->gotoHistoryPage();
 }
-
+//接收地址页
 void BitcoinGUI::gotoReceiveCoinsPage()
 {
     receiveCoinsAction->setChecked(true);
     if (walletFrame) walletFrame->gotoReceiveCoinsPage();
 }
-
+//发送地址页
 void BitcoinGUI::gotoSendCoinsPage(QString addr)
 {
     sendCoinsAction->setChecked(true);
     if (walletFrame) walletFrame->gotoSendCoinsPage(addr);
 }
-
+//签名TAB
 void BitcoinGUI::gotoSignMessageTab(QString addr)
 {
     if (walletFrame) walletFrame->gotoSignMessageTab(addr);
 }
-
+//菜单 验证消息页
 void BitcoinGUI::gotoVerifyMessageTab(QString addr)
 {
     if (walletFrame) walletFrame->gotoVerifyMessageTab(addr);
 }
 #endif // ENABLE_WALLET
-
+//设置连接数显示图片
 void BitcoinGUI::setNumConnections(int count)
 {
     QString icon;
@@ -685,7 +686,7 @@ void BitcoinGUI::setNumConnections(int count)
     labelConnectionsIcon->setPixmap(platformStyle->SingleColorIcon(icon).pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
     labelConnectionsIcon->setToolTip(tr("%n active connection(s) to Bitcoin network", "", count));
 }
-
+//设置GUI显示区块同步状态状态
 void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress)
 {
     if(!clientModel)
@@ -697,16 +698,16 @@ void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVer
     // Acquire current block source
     enum BlockSource blockSource = clientModel->getBlockSource();
     switch (blockSource) {
-        case BLOCK_SOURCE_NETWORK:
+        case BLOCK_SOURCE_NETWORK://区块来源于网络
             progressBarLabel->setText(tr("Synchronizing with network..."));
             break;
-        case BLOCK_SOURCE_DISK:
+        case BLOCK_SOURCE_DISK://区块来源于磁盘
             progressBarLabel->setText(tr("Importing blocks from disk..."));
             break;
-        case BLOCK_SOURCE_REINDEX:
+        case BLOCK_SOURCE_REINDEX://区块重新索引
             progressBarLabel->setText(tr("Reindexing blocks on disk..."));
             break;
-        case BLOCK_SOURCE_NONE:
+        case BLOCK_SOURCE_NONE://无区块源
             // Case: not Importing, not Reindexing and no network connection
             progressBarLabel->setText(tr("No block source available..."));
             break;
@@ -715,11 +716,13 @@ void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVer
     QString tooltip;
 
     QDateTime currentDate = QDateTime::currentDateTime();
+    //secs表示距离当前世界还有多少秒 
     qint64 secs = blockDate.secsTo(currentDate);
-
+    //显示处理多少个快
     tooltip = tr("Processed %n block(s) of transaction history.", "", count);
 
     // Set icon state: spinning if catching up, tick otherwise
+    //小于90*60就表示更新完毕
     if(secs < 90*60)
     {
         tooltip = tr("Up to date") + QString(".<br>") + tooltip;
@@ -727,14 +730,15 @@ void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVer
 
 #ifdef ENABLE_WALLET
         if(walletFrame)
-            walletFrame->showOutOfSyncWarning(false);
+            walletFrame->showOutOfSyncWarning(false);//隐藏Out of Sync 提示
 #endif // ENABLE_WALLET
-
+        //隐藏同步进度条
         progressBarLabel->setVisible(false);
         progressBar->setVisible(false);
     }
     else
     {
+        //如果没有同步完，下面就显示还有多久多久什么的
         // Represent time from last generated block in human readable text
         QString timeBehindText;
         const int HOUR_IN_SECONDS = 60*60;
@@ -900,6 +904,7 @@ void BitcoinGUI::showEvent(QShowEvent *event)
 }
 
 #ifdef ENABLE_WALLET
+//收入交易显示
 void BitcoinGUI::incomingTransaction(const QString& date, int unit, const CAmount& amount, const QString& type, const QString& address, const QString& label)
 {
     // On new transaction, make an info balloon
@@ -947,6 +952,7 @@ bool BitcoinGUI::eventFilter(QObject *object, QEvent *event)
 }
 
 #ifdef ENABLE_WALLET
+//处理付款请求
 bool BitcoinGUI::handlePaymentRequest(const SendCoinsRecipient& recipient)
 {
     // URI has to be valid
@@ -958,7 +964,7 @@ bool BitcoinGUI::handlePaymentRequest(const SendCoinsRecipient& recipient)
     }
     return false;
 }
-
+//钱包加密状态
 void BitcoinGUI::setEncryptionStatus(int status)
 {
     switch(status)
@@ -1051,7 +1057,7 @@ void BitcoinGUI::showProgress(const QString &title, int nProgress)
     else if (progressDialog)
         progressDialog->setValue(nProgress);
 }
-
+//线程安全的msgbox
 static bool ThreadSafeMessageBox(BitcoinGUI *gui, const std::string& message, const std::string& caption, unsigned int style)
 {
     bool modal = (style & CClientUIInterface::MODAL);

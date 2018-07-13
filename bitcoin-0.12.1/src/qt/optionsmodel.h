@@ -19,6 +19,7 @@ QT_END_NAMESPACE
    This can be changed to a tree once the settings become sufficiently
    complex.
  */
+//菜单栏 选项 数据类
 class OptionsModel : public QAbstractListModel
 {
     Q_OBJECT

@@ -8,6 +8,7 @@
 /**
  * An RAII-style reverse lock. Unlocks on construction and locks on destruction.
  */
+// 在类内给这个Mutex解锁,这样别的线程就可以访问,在类释放之后加锁
 template<typename Lock>
 class reverse_lock
 {

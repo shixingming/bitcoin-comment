@@ -17,6 +17,7 @@
 
 /** 
  * secp256k1:
+ * 各种密钥长度
  * const unsigned int PRIVATE_KEY_SIZE = 279;
  * const unsigned int PUBLIC_KEY_SIZE  = 65;
  * const unsigned int SIGNATURE_SIZE   = 72;
@@ -32,6 +33,8 @@
 typedef std::vector<unsigned char, secure_allocator<unsigned char> > CPrivKey;
 
 /** An encapsulated private key. */
+//封装的密钥类
+//用于生成私钥，公钥(带精简参数)
 class CKey
 {
 private:
@@ -100,30 +103,36 @@ public:
     bool IsValid() const { return fValid; }
 
     //! Check whether the public key corresponding to this private key is (to be) compressed.
+    //判断私钥是否压缩
     bool IsCompressed() const { return fCompressed; }
 
     //! Initialize from a CPrivKey (serialized OpenSSL private key data).
+    //初始化私钥
     bool SetPrivKey(const CPrivKey& vchPrivKey, bool fCompressed);
 
     //! Generate a new private key using a cryptographic PRNG.
+    //创建一个新的私钥
     void MakeNewKey(bool fCompressed);
 
     /**
      * Convert the private key to a CPrivKey (serialized OpenSSL private key data).
      * This is expensive. 
      */
+    //序列化OpenSSL私钥数据
     CPrivKey GetPrivKey() const;
 
     /**
      * Compute the public key from a private key.
      * This is expensive.
      */
+    //通过私钥计算公钥
     CPubKey GetPubKey() const;
 
     /**
      * Create a DER-serialized signature.
      * The test_case parameter tweaks the deterministic nonce.
      */
+    //创建DER序列化签名
     bool Sign(const uint256& hash, std::vector<unsigned char>& vchSig, uint32_t test_case = 0) const;
 
     /**
@@ -150,7 +159,7 @@ public:
     //! Check whether an element of a signature (r or s) is valid.
     static bool CheckSignatureElement(const unsigned char* vch, int len, bool half);
 };
-
+//CKey扩展类
 struct CExtKey {
     unsigned char nDepth;
     unsigned char vchFingerprint[4];

@@ -33,7 +33,7 @@ class uint256;
 QT_BEGIN_NAMESPACE
 class QTimer;
 QT_END_NAMESPACE
-
+//发送比特币的接受信息
 class SendCoinsRecipient
 {
 public:
@@ -96,6 +96,7 @@ public:
 };
 
 /** Interface to Bitcoin wallet from Qt view code. */
+//用于Qt的钱包数据类
 class WalletModel : public QObject
 {
     Q_OBJECT

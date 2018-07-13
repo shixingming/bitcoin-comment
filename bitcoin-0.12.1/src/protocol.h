@@ -36,11 +36,17 @@
 All messages in the network protocol use the same container format, which provides a required multi-field message header and an optional payload. The message header format is:
 所有的消息都是用的同样的结构格式
 Bytes	Name	    Data Type	Description
-4	start string	char[4]	    网络魔数 ;当流状态未知时，用于寻找下一条消息 
+4	start string	char[4]	    
+//消息开始字符串，长度4字节，就是告诉你是属于哪种消息标识，在UTF-8中无效
+ //主类型（MAIN）： 0xd9b4bef9
+ //测试网络(TESTNET)：0x0709110b
+ //回归测试(REGTEST)：0xdab6bffa
 12	command name	char[12]	命令   for example: version\0\0\0\0\0. https://bitcoin.org/en/developer-reference#protocol-versions
-4	payload size	uint32_t	负载块大小 Number of bytes in payload. The current maximum number of bytes (MAX_SIZE) allowed in the payload by Bitcoin Core is 32 MiB—messages with a payload size larger than this will be dropped or rejected.
-4	checksum	    char[4]	    校验 Added in protocol version 209. 
 
+4	payload size	uint32_t	负载块大小 Number of bytes in payload. The current maximum number of bytes (MAX_SIZE) allowed in the payload by Bitcoin Core is 32 MiB—messages with a payload size larger than this will be dropped or rejected.
+//最大值是32M (0x02000000)。 不包含消息头的大小
+4	checksum	    char[4]	    校验 Added in protocol version 209. 
+//把消息数据经过2次SHA256算法运算得到校验和
 First 4 bytes of SHA256(SHA256(payload)) in internal byte order.
 
 If payload is empty, as in verack and getaddr messages, the checksum is always 0x5df6e0e2 (SHA256(SHA256(<empty string>))).

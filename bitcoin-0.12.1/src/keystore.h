@@ -16,6 +16,7 @@
 #include <boost/variant.hpp>
 
 /** A virtual base class for key stores */
+//key存储的虚基类 
 class CKeyStore
 {
 protected:
@@ -45,12 +46,13 @@ public:
     virtual bool HaveWatchOnly(const CScript &dest) const =0;
     virtual bool HaveWatchOnly() const =0;
 };
-
+//私钥Map映射
 typedef std::map<CKeyID, CKey> KeyMap;
+//公钥Map映射
 typedef std::map<CKeyID, CPubKey> WatchKeyMap;
 typedef std::map<CScriptID, CScript > ScriptMap;
 typedef std::set<CScript> WatchOnlySet;
-
+//基础的key存储类，地址->密钥映射
 /** Basic key store, that keeps keys in an address->secret map */
 class CBasicKeyStore : public CKeyStore
 {

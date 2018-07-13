@@ -16,6 +16,7 @@ class CWallet;
 /**
    Qt model of the address book in the core. This allows views to access and modify the address book.
  */
+//地址表数据类
 class AddressTableModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -23,7 +24,7 @@ class AddressTableModel : public QAbstractTableModel
 public:
     explicit AddressTableModel(CWallet *wallet, WalletModel *parent = 0);
     ~AddressTableModel();
-
+    //两列定义标签，地址
     enum ColumnIndex {
         Label = 0,   /**< User specified label */
         Address = 1  /**< Bitcoin address */
@@ -34,6 +35,7 @@ public:
     };
 
     /** Return status of edit/insert operation */
+    //地址状态
     enum EditStatus {
         OK,                     /**< Everything ok */
         NO_CHANGES,             /**< No changes were made during edit operation */

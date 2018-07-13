@@ -24,6 +24,8 @@
  */
 
 /** A reference to a CKey: the Hash160 of its serialized public key */
+
+//Hash160
 class CKeyID : public uint160
 {
 public:
@@ -34,6 +36,7 @@ public:
 typedef uint256 ChainCode;
 
 /** An encapsulated public key. */
+//封装的公钥
 class CPubKey
 {
 private:

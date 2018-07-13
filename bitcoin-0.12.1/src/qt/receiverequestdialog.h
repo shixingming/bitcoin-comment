@@ -43,7 +43,7 @@ protected:
 private:
     QMenu *contextMenu;
 };
-
+//请求付款窗口 生成地址和二维码的窗口
 class ReceiveRequestDialog : public QDialog
 {
     Q_OBJECT

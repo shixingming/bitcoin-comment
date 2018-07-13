@@ -138,6 +138,14 @@ void ReceiveRequestDialog::update()
     QString uri = GUIUtil::formatBitcoinURI(info);
     ui->btnSaveAs->setEnabled(false);
     QString html;
+    /*
+    付款信息
+        URI: bitcoin:9NqXCzFH4sSB4w5MjZi4UTL2YDhxCmowLe
+        地址: 9NqXCzFH4sSB4w5MjZi4UTL2YDhxCmowLe
+    
+    */
+
+
     html += "<html><font face='verdana, arial, helvetica, sans-serif'>";
     html += "<b>"+tr("Payment information")+"</b><br>";
     html += "<b>"+tr("URI")+"</b>: ";
@@ -152,6 +160,7 @@ void ReceiveRequestDialog::update()
     ui->outUri->setText(html);
 
 #ifdef USE_QRCODE
+//图片
     ui->lblQRCode->setText("");
     if(!uri.isEmpty())
     {
