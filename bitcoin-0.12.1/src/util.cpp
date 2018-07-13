@@ -799,7 +799,7 @@ void SetupEnvironment()
     std::locale loc = boost::filesystem::path::imbue(std::locale::classic());
     boost::filesystem::path::imbue(loc);
 }
-
+//初始化网络库
 bool SetupNetworking()
 {
 #ifdef WIN32

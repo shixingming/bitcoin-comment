@@ -1040,9 +1040,11 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     // ********************************************************* Step 4: application initialization: dir lock, daemonize, pidfile, debug log
 
     // Initialize elliptic curve code
+
+    //初始化椭圆加密代码
     ECC_Start();
     globalVerifyHandle.reset(new ECCVerifyHandle());
-
+    //可用性检查
     // Sanity check
     if (!InitSanityCheck())
         return InitError(_("Initialization sanity check failed. Bitcoin Core is shutting down."));

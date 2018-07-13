@@ -66,7 +66,7 @@ void CScheduler::serviceQueue()
 
             Function f = taskQueue.begin()->second;
             taskQueue.erase(taskQueue.begin());
-
+            //从队列头获取回调函数，移除队列，并执行，
             {
                 // Unlock before calling f, so it can reschedule itself or another task
                 // without deadlocking:
@@ -93,7 +93,7 @@ void CScheduler::stop(bool drain)
     }
     newTaskScheduled.notify_all();
 }
-
+//队列调度
 void CScheduler::schedule(CScheduler::Function f, boost::chrono::system_clock::time_point t)
 {
     {
@@ -102,7 +102,7 @@ void CScheduler::schedule(CScheduler::Function f, boost::chrono::system_clock::t
     }
     newTaskScheduled.notify_one();
 }
-
+//立即调度
 void CScheduler::scheduleFromNow(CScheduler::Function f, int64_t deltaSeconds)
 {
     schedule(f, boost::chrono::system_clock::now() + boost::chrono::seconds(deltaSeconds));
@@ -118,7 +118,7 @@ void CScheduler::scheduleEvery(CScheduler::Function f, int64_t deltaSeconds)
 {
     scheduleFromNow(boost::bind(&Repeat, this, f, deltaSeconds), deltaSeconds);
 }
-
+//获取队列信息
 size_t CScheduler::getQueueInfo(boost::chrono::system_clock::time_point &first,
                              boost::chrono::system_clock::time_point &last) const
 {

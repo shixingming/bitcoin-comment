@@ -69,7 +69,7 @@ bool AppInit(int argc, char* argv[])
     // Parameters
     //
     // If Qt is used, parameters/bitcoin.conf are parsed in qt/bitcoin.cpp's main()
-    //把程序启动的参数放到 mapArgs里面
+    //把程序启动的参数放到 mapArgs mapMultiArgs里面
     ParseParameters(argc, argv);
     //
     // Process help and version before taking care about datadir
@@ -95,6 +95,7 @@ bool AppInit(int argc, char* argv[])
 
     try
     {
+        //设置数据目录
         if (!boost::filesystem::is_directory(GetDataDir(false)))
         {
             fprintf(stderr, "Error: Specified data directory \"%s\" does not exist.\n", mapArgs["-datadir"].c_str());
@@ -102,6 +103,7 @@ bool AppInit(int argc, char* argv[])
         }
         try
         {
+            //配置文件
             ReadConfigFile(mapArgs, mapMultiArgs);
         } catch (const std::exception& e) {
             fprintf(stderr,"Error reading configuration file: %s\n", e.what());
@@ -109,6 +111,7 @@ bool AppInit(int argc, char* argv[])
         }
         // Check for -testnet or -regtest parameter (Params() calls are only valid after this clause)
         try {
+            //设置网络参数
             SelectParams(ChainNameFromCommandLine());
         } catch (const std::exception& e) {
             fprintf(stderr, "Error: %s\n", e.what());
@@ -127,6 +130,7 @@ bool AppInit(int argc, char* argv[])
             exit(1);
         }
 #ifndef WIN32
+        //后台运行
         fDaemon = GetBoolArg("-daemon", false);
         if (fDaemon)
         {
@@ -150,11 +154,13 @@ bool AppInit(int argc, char* argv[])
                 fprintf(stderr, "Error: setsid() returned %d errno %d\n", sid, errno);
         }
 #endif
+        //服务端模式
         SoftSetBoolArg("-server", true);
 
         // Set this early so that parameter interactions go to console
         InitLogging();
         InitParameterInteraction();
+        //完成参数初始化，进入第二层初始化，否则跳出异常报错
         fRet = AppInit2(threadGroup, scheduler);
     }
     catch (const std::exception& e) {
